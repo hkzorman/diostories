@@ -1,0 +1,124 @@
+<div *ngIf="isEditMode && diostory" class="container">
+    <!-- Top toolbar - change this to be in navbar -->
+    <div class="level is-mobile">
+        <div class="level-left"></div>
+        <div class="level-right">
+            <button class="button is-success" (click)="saveButtonClick()" [ngClass]="{'is-loading': isSaving === true}" [disabled]="isSaving === true">Guardar</button>
+            <button class="button" (click)="cancelButtonClick()">Cancelar</button>
+        </div>
+    </div>
+    
+    <div class="field">
+        <label class="label">Titulo</label>
+        <div class="control">
+            <input class="input" type="text" placeholder="" [(ngModel)]="diostory!.title">
+        </div>
+    </div>
+
+    <!-- Panel editor -->
+    <div class="box">
+        <div class="level is-mobile">
+            <div class="level-left">
+                <label class="label">Paneles</label>
+            </div>
+            <div class="level-right">
+                <button class="button">
+                    <span class="icon">
+                        <i class="fas fa-plus fa-lg"></i>
+                    </span>
+                    <span class="is-hidden-mobile">Anadir</span>
+                </button>
+                <button class="button">
+                    <span class="icon">
+                        <i class="fas fa-arrow-left fa-lg"></i>
+                    </span>
+                </button>
+                <button class="button">
+                    <span class="icon">
+                        <i class="fas fa-arrow-right fa-lg"></i>
+                    </span>
+                </button>
+                <button class="button">
+                    <span class="icon">
+                        <i class="fas fa-trash fa-lg"></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <label class="label">Imagen</label>
+        <!-- Image editor -->
+        <div class="level">
+            <div class="level-left">
+                <div class="file has-name is-fullwidth">
+                    <label class="file-label">
+                        <input class="file-input" type="file" name="file" (change)="onFileChange($event)">
+                        <span class="file-cta">
+                            <span class="file-icon">
+                                <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="file-label">
+                                Escoger
+                            </span>
+                        </span>
+                        <span class="file-name">
+                            {{ currentPanel!.imageUrl }}
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <div class="level-right">
+                <button class="button is-fullwidth" [ngClass]="{'is-loading': isFileUploading === true}" [disabled]="isFileUploading === true" (click)="uploadButtonClick()">Subir</button>
+            </div>
+        </div>
+        
+        <img class="image is-4by3" [src]="getAbsoluteImageUrl(currentPanel!.imageUrl)" />
+
+        <!-- Text Editor -->
+        <div class="field">
+            <label class="label">Texto (puede utilizar HTML)</label>
+            <div class="control">
+                <textarea class="textarea has-fixed-size" placeholder="" [(ngModel)]="currentPanel!.text"></textarea>
+            </div>
+        </div>
+
+    </div>
+      
+</div>
+
+
+<div *ngIf="!isEditMode && diostory" class="container has-text-centered">
+    <!-- Top view -->
+    <!-- TODO: Change this button to navbar. That will require ViewChild, EventEmitter-->
+    <div class="level is-mobile">
+        <div class="level-left"></div>
+        <div class="level-right">
+            <button class="button is-info" (click)="editButtonClick()">Editar</button>
+        </div>
+    </div>
+    
+    <span *ngIf="diostory!.getCurrentPanelIndex() === 1" class="title is-3 is-capitalized">{{ diostory!.title }}</span>
+    <div *ngIf="diostory!.getCurrentPanelIndex() > 1" class="level is-mobile">
+        <div class="level-left">
+            <span>{{ diostory!.title }}</span>
+        </div>
+        <div class="level-right">
+            <span>{{ diostory!.getCurrentPanelIndex() }}/{{ diostory!.getPanelCount() }}</span>
+        </div>
+    </div>
+
+    <div class="container has-text-left">
+        <img [src]="getAbsoluteImageUrl(currentPanel!.imageUrl)" />
+        <div class="content" [innerHtml]="currentPanel!.text">
+        </div>
+
+        <div class="level is-mobile">
+            <div class="level-left">
+                <button class="button is-primary" (click)="prevButtonClick()">Anterior</button>
+            </div>
+            <div class="level-right">
+                <button class="button is-primary" (click)="nextButtonClick()">Siguiente</button>
+            </div>
+        </div>
+    </div>
+</div>
