@@ -11,7 +11,7 @@ export class DiostoryService {
   private baseApiUrl: string;
 
   constructor(private http: HttpClient) { 
-    this.baseApiUrl = "http://katpoc.duckdns.org:8102";
+    this.baseApiUrl = "http://0.0.0.0:8102";
   }
 
   list(): Observable<any> {

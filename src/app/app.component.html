@@ -1,15 +1,52 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" (click)="homeNavbarOptionClick()">
+      <strong>Diohistorias</strong>
+    </a>
+
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarBasicExample" class="navbar-menu">
+    
+    <div class="navbar-start">
+      <!-- <a class="navbar-item" (click)="homeNavbarOptionClick()">
+        Historias
+      </a> -->
+    </div>
+
+    <div class="navbar-end">
+      <a class="navbar-item">
+        <button class="button is-primary is-light" (click)="createButtonClick()">Crear</button>
+      </a>
+    </div>
+  </div>
+</nav>
 
 <div class="section">
   <div class="columns">
     <div class="column">
       
-      <div *ngIf="selectedId === null" class="container">
-        <span *ngFor="let dio of diostories" (click)="selectedId = dio.id">
+      <div *ngIf="currentView === View.Home && diostories!.length === 0" class="container has-text-centered">
+        No hay ninguna historia!
+      </div>
+      
+      <div *ngIf="currentView === View.Home && diostories!.length > 0" class="container">
+        <span *ngFor="let dio of diostories" (click)="diostoryTitleClick(dio)">
           {{ dio.title }}
         </span>
       </div>
 
-      <diostory-viewer [diostoryId]="selectedId!"></diostory-viewer>
+      <diostory-viewer 
+        *ngIf="currentView === View.Viewer" 
+        [diostoryId]="selectedId!"
+        [editorMode]="viewerEditMode"
+        (onCancelButtonClick)="handleCancelButtonClick($event)">
+      </diostory-viewer>
     </div>
   </div>
 </div>

@@ -24,6 +24,10 @@ export class Diostory {
         this.panels.push(new DiostoryPanel(text, image));
     }
 
+    removePanel(): void {
+        this.panels.splice(this.currentIdx, 1);
+    }
+
     firstPanel(): DiostoryPanel {
         this.currentIdx = 0;
         return this.panels[0];
@@ -59,6 +63,7 @@ export class Diostory {
 
     static fromObject(object: any): Diostory {
         let result = new Diostory(object.title);
+        result.id = object.id;
         result.panels = object.panels;
         return result;
     }
