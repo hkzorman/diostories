@@ -18,6 +18,7 @@ export class DiostoryViewerComponent {
   file?: File;
   isFileUploading: boolean;
   isSaving: boolean;
+  imgSize: string;
 
   @Input()
   set diostoryId(object: number) {
@@ -45,6 +46,9 @@ export class DiostoryViewerComponent {
       this.original = this.diostory.clone();
       this.isEditMode = true;
     }
+    else {
+      this.isEditMode = input;
+    }
   }
 
   @Output() onCancelButtonClick = new EventEmitter<any>();
@@ -54,6 +58,7 @@ export class DiostoryViewerComponent {
     this.file = undefined;
     this.isSaving = false;
     this.isFileUploading = false;
+    this.imgSize = "fullwidth";
   }
 
   editButtonClick(): void {
@@ -91,11 +96,19 @@ export class DiostoryViewerComponent {
     }
   }
 
+  hasNextPanel(): boolean {
+    return this.diostory!.getCurrentPanelIndex() < this.diostory!.getPanelCount();
+  }
+
   prevButtonClick(): void {
     let prevPanel = this.diostory!.prevPanel();
     if (prevPanel) {
       this.currentPanel = prevPanel;
     }
+  }
+
+  hasPrevPanel(): boolean {
+    return this.diostory!.getCurrentPanelIndex() > 1;
   }
 
   addPanelButtonClick(): void {
@@ -110,13 +123,28 @@ export class DiostoryViewerComponent {
     if (prevPanel) this.currentPanel = prevPanel;
   }
 
+  isFirstPanel(): boolean {
+    return this.diostory!.getCurrentPanelIndex() === 1;
+  }
+
   onFileChange(event: any): void {
     this.file = event.target.files[0];
+
+    this.isFileUploading = !this.isFileUploading; 
+    console.log(this.file);
+    this.diostoryService.uploadImage(this.file, true).subscribe( 
+        (response: any) => { 
+            if (typeof (response) === 'object') { 
+                this.isFileUploading = false;
+                this.currentPanel!.imageUrl = response.url;
+            } 
+        } 
+    );
   }
 
   uploadButtonClick() { 
     this.isFileUploading = !this.isFileUploading; 
-    console.log(this.file); 
+    console.log(this.file);
     this.diostoryService.uploadImage(this.file).subscribe( 
         (response: any) => { 
             if (typeof (response) === 'object') { 

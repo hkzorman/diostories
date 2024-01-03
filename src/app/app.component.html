@@ -1,17 +1,17 @@
-<nav class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" (click)="homeNavbarOptionClick()">
       <strong>Diohistorias</strong>
     </a>
 
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" (click)="showNavMenu = !showNavMenu" [ngClass]="{'is-active': showNavMenu}">
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
     </a>
   </div>
 
-  <div id="navbarBasicExample" class="navbar-menu">
+  <div id="navbarBasicExample" class="navbar-menu" [ngClass]="{'is-active': showNavMenu}">
     
     <div class="navbar-start">
       <!-- <a class="navbar-item" (click)="homeNavbarOptionClick()">
@@ -20,14 +20,26 @@
     </div>
 
     <div class="navbar-end">
-      <a class="navbar-item">
+      <a class="navbar-item" *ngIf="!selectedId && !viewerEditMode">
         <button class="button is-primary is-light" (click)="createButtonClick()">Crear</button>
+      </a>
+
+      <a class="navbar-item" *ngIf="selectedId && !viewerEditMode">
+        <button class="button is-link is-light" (click)="createButtonClick()">Editar</button>
+      </a>
+
+      <a class="navbar-item" *ngIf="viewerEditMode">
+        <button class="button is-primary is-light" (click)="saveButtonClick()">Guardar</button>
+      </a>
+
+      <a class="navbar-item" *ngIf="viewerEditMode">
+        <button class="button is-link is-light" (click)="cancelButtonClick()">Cancelar</button>
       </a>
     </div>
   </div>
 </nav>
 
-<div class="section">
+<div class="section pt-4 pb-4">
   <div class="columns">
     <div class="column">
       

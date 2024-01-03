@@ -67,18 +67,28 @@
                                     Escoger
                                 </span>
                             </span>
-                            <span class="file-name">
+                            <span class="file-name" *ngIf="currentPanel?.imageUrl">
                                 {{ currentPanel!.imageUrl }}
                             </span>
                         </label>
                     </div>
                 </div>
                 <div class="level-right">
+                    <button class="button" (click)="imgSize = 'small'">Small</button>
+                    <button class="button" (click)="imgSize = 'medium'">Medium</button>
+                    <button class="button" (click)="imgSize = 'large'">Large</button>
+                    <button class="button" (click)="imgSize = 'fullwidth'">Full</button>
                     <button class="button is-fullwidth" [ngClass]="{'is-loading': isFileUploading === true}" [disabled]="isFileUploading === true" (click)="uploadButtonClick()">Subir</button>
                 </div>
             </div>
-        
-            <img class="image is-3by2 is-fullwidth" [src]="getAbsoluteImageUrl(currentPanel!.imageUrl)" />
+            
+            <div *ngIf="currentPanel?.imageUrl" class="columns">
+                <div class="column" [ngClass]="{'is-full': imgSize === 'fullwidth', 'is-three-quarters': imgSize === 'large', 'is-half': imgSize === 'medium', 'is-one-quarter': imgSize === 'small'}">
+                    <figure class="image is-3by2">
+                        <img [src]="getAbsoluteImageUrl(currentPanel!.imageUrl)" />
+                    </figure>
+                </div>
+            </div>
         
             <!-- Text Editor -->
             <div class="card">
@@ -102,36 +112,58 @@
 
 
 <div *ngIf="!isEditMode && diostory" class="container has-text-centered">
-    <!-- Top view -->
-    <!-- TODO: Change this button to navbar. That will require ViewChild, EventEmitter-->
-    <div class="level is-mobile">
-        <div class="level-left"></div>
-        <div class="level-right">
-            <button class="button is-info" (click)="editButtonClick()">Editar</button>
-        </div>
-    </div>
+    <!-- Title  -->    
+    <span *ngIf="isFirstPanel()" class="title is-3 is-capitalized">{{ diostory!.title }}</span>
+    <span *ngIf="!isFirstPanel()">{{ diostory!.title }}</span>
     
-    <span *ngIf="diostory!.getCurrentPanelIndex() === 1" class="title is-3 is-capitalized">{{ diostory!.title }}</span>
-    <div *ngIf="diostory!.getCurrentPanelIndex() > 1" class="level is-mobile">
+    <!-- Top navbar -->
+    <div class="level is-mobile pt-2" *ngIf="!isFirstPanel()">
         <div class="level-left">
-            <span>{{ diostory!.title }}</span>
         </div>
         <div class="level-right">
-            <span>{{ diostory!.getCurrentPanelIndex() }}/{{ diostory!.getPanelCount() }}</span>
+            <button class="button is-small is-light" (click)="prevButtonClick()" [disabled]="!hasPrevPanel()">
+                <span class="icon">
+                    <i class="fas fa-chevron-left fa-lg"></i>
+                </span>
+            </button>
+
+            <button class="button is-small is-light is-static">{{ diostory!.getCurrentPanelIndex() }}/{{ diostory!.getPanelCount() }}</button>
+
+            <button class="button is-small is-light" (click)="nextButtonClick()" [disabled]="!hasNextPanel()">
+                <span class="icon">
+                    <i class="fas fa-chevron-right fa-lg"></i>
+                </span>
+            </button>
         </div>
     </div>
 
     <div class="container has-text-left">
-        <img [src]="getAbsoluteImageUrl(currentPanel!.imageUrl)" />
+
+        <figure class="image mb-3" [ngClass]="{'mt-3': diostory!.getCurrentPanelIndex() === 1}">
+            <img [src]="getAbsoluteImageUrl(currentPanel!.imageUrl)" />
+        </figure>
         <div class="content" [innerHtml]="currentPanel!.text">
         </div>
 
+        <!-- Bottom bar -->
         <div class="level is-mobile">
             <div class="level-left">
-                <button class="button is-primary" (click)="prevButtonClick()">Anterior</button>
             </div>
             <div class="level-right">
-                <button class="button is-primary" (click)="nextButtonClick()">Siguiente</button>
+                <button class="button is-small is-light" (click)="prevButtonClick()" [disabled]="!hasPrevPanel()" *ngIf="!isFirstPanel()">
+                    <span class="icon">
+                        <i class="fas fa-chevron-left fa-lg"></i>
+                    </span>
+                </button>
+    
+                <button *ngIf="!isFirstPanel()" class="button is-small is-light is-static">{{ diostory!.getCurrentPanelIndex() }}/{{ diostory!.getPanelCount() }}</button>
+    
+                <button class="button is-small is-light" (click)="nextButtonClick()" [disabled]="!hasNextPanel()">
+                    <span *ngIf="isFirstPanel()">Comenzar</span>
+                    <span class="icon">
+                        <i class="fas fa-chevron-right fa-lg"></i>
+                    </span>
+                </button>
             </div>
         </div>
     </div>

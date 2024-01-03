@@ -11,7 +11,7 @@ export class DiostoryService {
   private baseApiUrl: string;
 
   constructor(private http: HttpClient) { 
-    this.baseApiUrl = "http://0.0.0.0:8102";
+    this.baseApiUrl = "http://diostories.duckdns.org:8102";
   }
 
   list(): Observable<any> {
@@ -27,7 +27,7 @@ export class DiostoryService {
     return this.http.post(`${this.baseApiUrl}/save`, data);
   }
 
-  uploadImage(file: any): Observable<any> {
+  uploadImage(file: any, isTemporary: boolean = false): Observable<any> {
     // Create form data
     const formData = new FormData();
       
@@ -36,7 +36,7 @@ export class DiostoryService {
 
     let headers = new HttpHeaders();
     headers.append("Content-Type", "multipart/form-data");
-    return this.http.post(`${this.baseApiUrl}/uploadImage`, formData, { headers: headers });
+    return this.http.post(`${this.baseApiUrl}/uploadImage/${isTemporary}`, formData, { headers: headers });
   }
   
   getAbsoluteImageUrl(relativeUrl: string): string {
